@@ -230,9 +230,9 @@ export class BotService {
                 await usta.save();
 
                 await ctx.replyWithHTML(
-                  `<b>Quyidagi ma'lumotlarni tasdiqlaysizmi?</b>\n\n` +
+                  `<b>Sizning amlumotlaringiz tasdiqlaysizmi ?</b>\n\n` +
                     `1. Ismi: ${usta.name}\n` +
-                    `2. Tel: ${usta.phone_number}\n` +
+                    `2. Telefon: ${usta.phone_number}\n` +
                     `3. Ustaxona: ${usta.workshop_name || "-"}\n` +
                     `4. Manzil: ${usta.address || "-"}\n` +
                     `5. Moljal: ${usta.landmark || "-"}\n` +

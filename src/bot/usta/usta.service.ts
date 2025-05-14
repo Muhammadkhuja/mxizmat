@@ -22,24 +22,18 @@ export class UstaService {
     const buttons = categories.map((cat) => [
       Markup.button.callback(cat.name, `cat_${cat.user_id}`),
     ]);
-console.log(buttons);
+    console.log(buttons);
     await ctx.reply("Iltimos, oz yonalishingizni tanlang:", {
       ...Markup.inlineKeyboard(buttons),
-      
     });
-    
   }
   async OnClicLocation(ctx: Context) {
     try {
       const data = ctx.callbackQuery!["data"];
-      if(!data)
-        console.log("xatoo1");
       const message = ctx.callbackQuery!["message"];
-      if(!message){
-        console.log("xatooo2");
-        
+      if (!message) {
       }
-      
+
       console.log("callbackQuery:", ctx.callbackQuery);
 
       const categoryId = Number(data.split("_")[1]);
@@ -77,6 +71,44 @@ console.log(buttons);
       await ctx.replyWithHTML("ismingini kiriting");
     } catch (error) {
       console.log("errorr onAddress", error);
+    }
+  }
+
+  async onConfirmUsta(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const usta = await this.ustaModel.findOne({
+        where: { user_id, last_state: "confirm" },
+        order: [["id", "DESC"]],
+      });
+      if (usta) {
+        usta.last_state = "finish";
+        await usta.save();
+        await ctx.editMessageText("Ma'lumotlaringiz saqlandi.");
+      } else {
+        await ctx.reply("Ma'lumot topilmadi.");
+      }
+    } catch (error) {
+      console.log("Error onConfirmUsta", error);
+    }
+  }
+
+  async onCancelUsta(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const usta = await this.ustaModel.findOne({
+        where: { user_id, last_state: "confirm" },
+        order: [["id", "DESC"]],
+      });
+      if (usta) {
+        usta.last_state = "cancelled";
+        await usta.save();
+        await ctx.editMessageText("Ma'lumotlar bekor qilindi.");
+      } else {
+        await ctx.reply("Bekor qilish uchun ma'lumot topilmadi.");
+      }
+    } catch (error) {
+      console.log("Error onCancelUsta", error);
     }
   }
 }

@@ -19,4 +19,14 @@ export class UstaUpadte {
   async OnClicLocation(@Ctx() ctx: Context) {
     return this.ustaService.OnClicLocation(ctx);
   }
+
+  @Action("confirm_usta")
+  async onConfirmUsta(@Ctx() ctx: Context) {
+    return this.ustaService.onConfirmUsta(ctx);
+  }
+
+  @Action("cancel_usta")
+  async onCancelUsta(@Ctx() ctx: Context) {
+    return this.ustaService.onCancelUsta(ctx);
+  }
 }
