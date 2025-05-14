@@ -217,7 +217,7 @@ export class BotService {
 
               case "end_at":
                 usta.end_at = userInput;
-                usta.last_state = "duration";
+                usta.last_state = "time";
                 await usta.save();
                 await ctx.reply(
                   "Har bir mijoz uchun ortacha sarflanadigan vaqtni kiriting"
