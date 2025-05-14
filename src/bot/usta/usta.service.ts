@@ -10,7 +10,7 @@ export class UstaService {
   constructor(
     @InjectModel(Bot) private readonly botModel: typeof Bot,
     @InjectModel(Usta) private readonly ustaModel: typeof Usta,
-    @InjectModel(Category) private readonly categoryModel: typeof Category,
+    @InjectModel(Category) private readonly categoryModel: typeof Category
   ) {}
 
   async OnThisUstashw(ctx: Context) {
@@ -20,18 +20,26 @@ export class UstaService {
     }
 
     const buttons = categories.map((cat) => [
-      Markup.button.callback(cat.name, `cat_${cat.id}`),
+      Markup.button.callback(cat.name, `cat_${cat.user_id}`),
     ]);
-
-    await ctx.reply("Iltimos, oz yonalishingizni tanlang:",{ 
+console.log(buttons);
+    await ctx.reply("Iltimos, oz yonalishingizni tanlang:", {
       ...Markup.inlineKeyboard(buttons),
+      
     });
+    
   }
   async OnClicLocation(ctx: Context) {
     try {
       const data = ctx.callbackQuery!["data"];
+      if(!data)
+        console.log("xatoo1");
       const message = ctx.callbackQuery!["message"];
-
+      if(!message){
+        console.log("xatooo2");
+        
+      }
+      
       console.log("callbackQuery:", ctx.callbackQuery);
 
       const categoryId = Number(data.split("_")[1]);
@@ -44,7 +52,7 @@ export class UstaService {
     }
   }
 
-  async onRegister(ctx: Context, categoryId) {
+  async onRegister(ctx: Context, categoryId: number) {
     try {
       const user_id = ctx.from?.id;
       const user = await this.botModel.findByPk(user_id);
@@ -55,7 +63,7 @@ export class UstaService {
             .oneTime()
             .resize(),
         });
-        return
+        return;
       }
       await this.ustaModel.create({
         user_id: user_id!,

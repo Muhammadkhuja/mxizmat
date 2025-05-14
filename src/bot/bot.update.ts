@@ -1,8 +1,6 @@
 import {
-  Action,
   Command,
   Ctx,
-  Hears,
   On,
   Start,
   Update,

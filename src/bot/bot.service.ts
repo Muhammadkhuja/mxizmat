@@ -173,11 +173,7 @@ export class BotService {
                   "Telefon raqamingizni pastdagi tugam bilan jo'nating",
                   {
                     ...Markup.keyboard([
-                      [
-                        Markup.button.contactRequest(
-                          "Raqam yuborish"
-                        ),
-                      ],
+                      [Markup.button.contactRequest("Raqam yuborish")],
                     ])
                       .resize()
                       .oneTime(),
@@ -212,16 +208,14 @@ export class BotService {
                 });
                 break;
 
-              case "start_time":
+              case "start_at":
                 usta.start_at = userInput;
-                usta.last_state = "end_time";
+                usta.last_state = "end_at";
                 await usta.save();
-                await ctx.reply(
-                  "Ish tugash vaqtini kiriting"
-                );
+                await ctx.reply("Ish tugash vaqtini kiriting");
                 break;
 
-              case "end_time":
+              case "end_at":
                 usta.end_at = userInput;
                 usta.last_state = "duration";
                 await usta.save();
@@ -230,7 +224,7 @@ export class BotService {
                 );
                 break;
 
-              case "duration":
+              case "time":
                 usta.time = Number(userInput);
                 usta.last_state = "confirm";
                 await usta.save();
@@ -248,18 +242,8 @@ export class BotService {
                     `9. Mijozga vaqt: ${usta.time} min`,
                   {
                     ...Markup.inlineKeyboard([
-                      [
-                        Markup.button.callback(
-                          "Tasdiqlash",
-                          "confirm_usta"
-                        ),
-                      ],
-                      [
-                        Markup.button.callback(
-                          "Bekor qilish",
-                          "cancel_usta"
-                        ),
-                      ],
+                      [Markup.button.callback("Tasdiqlash", "confirm_usta")],
+                      [Markup.button.callback("Bekor qilish", "cancel_usta")],
                     ]),
                   }
                 );
