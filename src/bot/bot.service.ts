@@ -262,4 +262,16 @@ export class BotService {
       }
     }
   }
+  async admin_menu(ctx: Context, menu_text = `<b>Admin menyusi</b>`) {
+    try {
+      await ctx.reply(menu_text, {
+        parse_mode: "HTML",
+        ...Markup.keyboard(["Yovuz odam bo'lish", "Yaxshi odam bo'lish"])
+          .oneTime()
+          .resize(),
+      });
+    } catch (error) {
+      console.log("Admin menyu sida xatolik", error);
+    }
+  }
 }

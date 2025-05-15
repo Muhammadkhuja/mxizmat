@@ -66,4 +66,10 @@ export class Usta extends Model<Usta, IUstaCreatorAttr> {
     type: DataType.INTEGER,
   })
   declare category_id: number;
+
+  @Column({ 
+    type: DataType.BOOLEAN,
+    defaultValue: false 
+  })
+  declare status: boolean;
 }

@@ -4,11 +4,13 @@ import { Bot } from "../model/bot.model";
 import { Context, Markup, Telegraf } from "telegraf";
 import { Usta } from "../model/usta.model";
 import { Category } from "../model/category.model";
+import { BotService } from "../bot.service";
 
 @Injectable()
 export class UstaService {
   constructor(
     @InjectModel(Bot) private readonly botModel: typeof Bot,
+    private readonly botService: BotService,
     @InjectModel(Usta) private readonly ustaModel: typeof Usta,
     @InjectModel(Category) private readonly categoryModel: typeof Category
   ) {}
@@ -17,6 +19,7 @@ export class UstaService {
     const categories = await this.categoryModel.findAll();
     if (!categories.length) {
       return ctx.reply("Hozircha bolimlar yoq.");
+      
     }
 
     const buttons = categories.map((cat) => [
@@ -84,9 +87,19 @@ export class UstaService {
       if (usta) {
         usta.last_state = "finish";
         await usta.save();
-        await ctx.editMessageText("Ma'lumotlaringiz saqlandi.");
+        const contextMessage = ctx.callbackQuery!["message"];
+        await ctx.deleteMessage(contextMessage?.message_id);
+        await ctx.reply(
+          "Usta muvaffaqiyatli tasdiqlandi.",
+          Markup.inlineKeyboard([
+            [Markup.button.callback("Tasdiqlash", "confirm_usta")],
+            [Markup.button.callback("Bekor qilish", "cancel_usta")],
+            [Markup.button.callback("Admin bilan bog'lanish", "admin_tell")],
+          ])
+        );
       } else {
         await ctx.reply("Ma'lumot topilmadi.");
+        await this.botService.start(ctx);
       }
     } catch (error) {
       console.log("Error onConfirmUsta", error);
@@ -104,6 +117,7 @@ export class UstaService {
         usta.last_state = "cancelled";
         await usta.save();
         await ctx.editMessageText("Ma'lumotlar bekor qilindi.");
+        await this.botService.start(ctx);
       } else {
         await ctx.reply("Bekor qilish uchun ma'lumot topilmadi.");
       }
